@@ -11,23 +11,29 @@ persons = [
         'id': 3,
         'name': "Siva"
     },
-     {
+    {
         'id': 4,
         'name': "sss"
     }
 ]
 
 # home
+
+
 @app.route('/')
 def home():
     return "Hello to Api"
 
 # GET ALL /person
+
+
 @app.route('/persons')
 def get_all_persons():
     return jsonify({'persons': persons})
 
 # GET one
+
+
 @app.route('/person/<int:id>')
 def get_person(id):
     for person in persons:
@@ -36,6 +42,7 @@ def get_person(id):
     return {'msg': 'person not found'}, 404
 
 # POST /person
+
 
 @app.route('/person', methods=['POST'])
 def create_person():
@@ -75,15 +82,30 @@ def person(id):
 # DELETE
 @app.route('/person/<int:id>', methods=['DELETE'])
 def delete_person(id):
-    global persons
-    # Find the index of the person with the given ID in the `persons` list
-    index_to_delete = next((index for index, person in enumerate(persons) if person['id'] == id), None)
+    # global persons
+    # # Find the index of the person with the given ID in the `persons` list
+    # index_to_delete = next((index for index, person in enumerate(persons) if person['id'] == id), None)
 
-    if index_to_delete is not None:
+    # if index_to_delete is not None:
+    #     # If the person is found, remove them from the list
+    #     deleted_person = persons.pop(index_to_delete)
+    #     return jsonify({"message": f"Person with id={id} deleted successfully.", "deleted_person": deleted_person}), 200
+    # else:
+    #     return jsonify({"message": f"Person with id={id} not found in the list."}), 404
+
+    person_to_delete = next((person for person in persons if person['id'] == id), None)
+    if person_to_delete:
         # If the person is found, remove them from the list
-        deleted_person = persons.pop(index_to_delete)
-        return jsonify({"message": f"Person with id={id} deleted successfully.", "deleted_person": deleted_person}), 200
+        persons.remove(person_to_delete)
+        print(f"Dictionary with id={id} deleted successfully.")
+        print(persons)  # Print the updated list after deletion
+
+        # Return a response indicating success (Optional)
+        return jsonify({"message": f"Dictionary with id={id} deleted successfully."}), 200
     else:
-        return jsonify({"message": f"Person with id={id} not found in the list."}), 404
+        print(f"Dictionary with id={id} not found in the list.")
+        # Return a response indicating failure (Optional)
+        return jsonify({"error": f"Dictionary with id={id} not found in the list."}), 404
+
 
 app.run(port=5009, debug=True)
