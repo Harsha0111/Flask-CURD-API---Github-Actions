@@ -8,12 +8,12 @@ persons = [
         'name': "Abi"
     },
     {
-        'id': 3,
+        'id': 2,
         'name': "Siva"
     },
     {
-        'id': 4,
-        'name': "sss"
+        'id': 3,
+        'name': "Anu"
     }
 ]
 
@@ -82,18 +82,8 @@ def person(id):
 # DELETE
 @app.route('/person/<int:id>', methods=['DELETE'])
 def delete_person(id):
-    # global persons
-    # # Find the index of the person with the given ID in the `persons` list
-    # index_to_delete = next((index for index, person in enumerate(persons) if person['id'] == id), None)
-
-    # if index_to_delete is not None:
-    #     # If the person is found, remove them from the list
-    #     deleted_person = persons.pop(index_to_delete)
-    #     return jsonify({"message": f"Person with id={id} deleted successfully.", "deleted_person": deleted_person}), 200
-    # else:
-    #     return jsonify({"message": f"Person with id={id} not found in the list."}), 404
-
-    person_to_delete = next((person for person in persons if person['id'] == id), None)
+    person_to_delete = next(
+        (person for person in persons if person['id'] == id), None)
     if person_to_delete:
         # If the person is found, remove them from the list
         persons.remove(person_to_delete)
@@ -108,4 +98,4 @@ def delete_person(id):
         return jsonify({"error": f"Dictionary with id={id} not found in the list."}), 404
 
 
-app.run(port=5009, debug=True)
+app.run(host='0.0.0.0', port=5000, debug=True)
