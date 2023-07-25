@@ -98,7 +98,7 @@ def create_tool_in_option(ip):
     return jsonify({'msg': 'option not found'})
 
 #UPDATE 
-@app.route('/option/update/<string:ip>', methods=['PUT'])
+@app.route('/option/<string:ip>', methods=['PUT'])
 def update(ip):
     req_ip = request.get_json()
     for update_option in options:
@@ -117,7 +117,7 @@ def update(ip):
 
 
 #DELETE 
-@app.route('/option/delete/<string:ip>', methods=['DELETE'])
+@app.route('/option/<string:ip>', methods=['DELETE'])
 def delete(ip):
     global options
     options =  list(filter( lambda dictionary: dictionary['ip'] != ip, options ))

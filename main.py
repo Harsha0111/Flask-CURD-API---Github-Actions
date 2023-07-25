@@ -8,27 +8,34 @@ persons = [
         'name': "Abi"
     },
     {
-        'id': 2,
-        'name': "Banu"
+        'id': 3,
+        'name': "Siva"
+    },
+     {
+        'id': 4,
+        'name': "sss"
     }
 ]
 
 # home
-
-
 @app.route('/')
 def home():
     return "Hello to Api"
 
-# GET /person
-
-
+# GET ALL /person
 @app.route('/persons')
 def get_all_persons():
     return jsonify({'persons': persons})
 
-# POST /person
+# GET one
+@app.route('/person/<int:id>')
+def get_person(id):
+    for person in persons:
+        if person['id'] == id:
+            return person
+    return {'msg': 'person not found'}, 404
 
+# POST /person
 
 @app.route('/person', methods=['POST'])
 def create_person():
@@ -52,20 +59,31 @@ def create_person():
 
 
 # UPDATE
-@app.route('/person', methods=['PUT'])
-def update_dictionary():
+@app.route('/person/<int:id>', methods=['PUT'])
+def person(id):
     req_id = request.get_json()
-
+    for person in persons:
+        if person['id'] == id:
+            update = {
+                'name': req_id['name']
+            }
+            person.update(update)
+            return (person)
+    return jsonify({'msg': 'person not found'})
 
 
 # DELETE
+@app.route('/person/<int:id>', methods=['DELETE'])
+def delete_person(id):
+    global persons
+    # Find the index of the person with the given ID in the `persons` list
+    index_to_delete = next((index for index, person in enumerate(persons) if person['id'] == id), None)
 
-# @app.route('/person/<string:id>', methods=['DELETE'])
-# req_id = request.get_json()
-# updated_list = delete_id(persons, req_id)
-# if len(updated_list) < len(persons):
-#     print(f"Dictionary with id={id} deleted successfully.")
-#     print(updated_list)
-# else:
-#     print(f"Dictionary with id={id} not found in the list.")
+    if index_to_delete is not None:
+        # If the person is found, remove them from the list
+        deleted_person = persons.pop(index_to_delete)
+        return jsonify({"message": f"Person with id={id} deleted successfully.", "deleted_person": deleted_person}), 200
+    else:
+        return jsonify({"message": f"Person with id={id} not found in the list."}), 404
+
 app.run(port=5009, debug=True)
